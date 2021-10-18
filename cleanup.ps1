@@ -1,15 +1,6 @@
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
-function Start-Sleep($seconds) {
-    $doneDT = (Get-Date).AddSeconds($seconds)
-    while($doneDT -gt (Get-Date)) {
-        $secondsLeft = $doneDT.Subtract((Get-Date)).TotalSeconds
-        $percent = ($seconds - $secondsLeft) / $seconds * 100
-        Write-Progress -Activity "Sleeping" -Status "Sleeping..." -SecondsRemaining $secondsLeft -PercentComplete $percent
-        [System.Threading.Thread]::Sleep(300000)
-    }
-    Write-Progress -Activity "Sleeping" -Status "Sleeping..." -SecondsRemaining 0 -Completed
-}
+Start-Sleep -Seconds 300
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -23,8 +14,14 @@ REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Defau
 # Start Automate installer in quiet mode
 msiexec /i C:\Support\Installers\Automate-test.msi /q
 
+$filePath = 'C:\Windows\LTSvc'
+while (-not (Test-Path -Path $filePath)) {
+    ## Wait a specific interval
+    Start-Sleep -Seconds 300
+}
+
 # Run WindowsSetup2_0-WIP
-# Forked from Cole's GitHub repo
+# Forked from Cole's GitHub repo 
 
 PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.ps1
 
