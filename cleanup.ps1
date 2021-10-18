@@ -12,7 +12,7 @@ REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdmi
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
 # Start Automate installer in quiet mode
-msiexec /i C:\Support\Installers\Automate-test.msi /q
+msiexec /i C:\Support\Installers\Automate-test.msi /q /L*V "C:\Support\Logs\automate.log"
 
 $filePath = 'C:\Windows\LTSvc'
 while (-not (Test-Path -Path $filePath)) {
@@ -21,7 +21,7 @@ while (-not (Test-Path -Path $filePath)) {
 }
 
 # Run WindowsSetup2_0-WIP
-# Forked from Cole's GitHub repo 
+# Forked from Cole's GitHub repo
 
 PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.ps1
 
