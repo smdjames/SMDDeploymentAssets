@@ -1,6 +1,6 @@
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
-Start-Sleep -Seconds 300
+Start-Sleep -Seconds 120
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
