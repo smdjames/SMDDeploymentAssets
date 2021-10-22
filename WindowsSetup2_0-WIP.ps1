@@ -573,3 +573,94 @@ $Paint3Dstuff = @(
 
 # Close debugging log Transcript
 Stop-Transcript
+
+<#
+###############################################
+Checklist items:
+
+Enable Wake on LAN
+Disable Secure Boot
+
+#####
+Proceed through basic questions and license agreement
+Choose Set up for an organization or, if not given that option, select use a local account instead
+Choose Domain join if asked to use a Microsoft account after selecting the organization option
+Who's Going to Use This PC?
+Username: SystemsMD
+Password: Use the current standard password
+Security Questions:
+Pick a random question
+Mash random letters on the keyboard
+Repeat two more times 
+Decline Cortana
+"Do more across devices..." - NO
+"Choose privacy settings..."
+Click on the top-left switch to turn it to "No"
+Press TAB, then the left arrow key to turn the next one to "No"
+Repeat until all options are "No"
+"Support and Protection" - Ignore 1st screen, uncheck all on 2nd screen
+Network Discovery - No
+###### Operations done by  
+
+START UPDATES [] #Set Automatically. See Lines 563-572
+SET COMPUTER NAME [] #Script Doesn't Prompt. Needs to be worked out
+ENABLE SYSTEM PROTECTION [] # See Lines 32-38
+If the PC has an SSD, set the max usage to 5%
+If the PC has an HDD, set the max usage to 10% ##Need to find way to set
+DISABLE CORTANA [] See Lines 553-552
+ALLOW F8 TO BOOT TO SAFE MODE [] #Not Yet Set
+Run CMD, hold control and shift when pressing Enter to run as admin
+Enter command: bcdedit /set {default} bootmenupolicy legacy
+Make sure you see "The operation completed successfully" output
+CREATE CLIENT LOCAL ADMIN ACCOUNT [] #Can be easily added...I think
+Use Evernote to discover the username and password of the domain admin account for the client
+In the CMD window that is still open enter the following, replacing the variable $username with the relevant client username: net user $USERNAME * /add
+When prompted, enter the password twice
+In the CMD window, input: net localgroup administrators /add $USERNAME
+DISABLE UAC [] #See Lines 555-558
+Run UserAccountControlSettings
+CONFIGURE POWER OPTIONS [] #See Lines 43-50
+CONFIGURE SSD OVERPROVISIONING [] #Can this be done?
+If and ONLY if the PC has an SSD installed:
+Run diskmgmt.msc
+Right-click on the system volume (usually C: and usually the biggest volume)
+Click "Shrink Volume..."
+In the "Amount of space to shrink in MB:", enter the result of this expression:  (x * .1)(1024)  where x is the approximate size of the drive (250gb, 500gb, 1000gb, etc.)
+To learn why you should do this, Google "SSD Overprovisioning"
+ENSURE PC IS FULLY UPDATED [] #Can Check again
+
+5: SOFTWARE AND DRIVERS 
+UPDATE AND CONFIGURE DEVICES []
+Run devmgmt.msc
+Right click on, and update the following devices:
+Any and all video cards
+Any and all NICs (Network Interface Cards) both Ethernet and WiFi
+Touchpads (laptops)
+Built-in keyboards (laptops)
+Built-in monitors (laptops)
+In properties, enable wake and disable powersave on the NICs
+In properties, disable powersave on all USB hubs
+Ensure there are no unknown devices or devices with red/yellow icons
+
+UNINSTALL BLOATWARE [] #See Lines 76-531
+INSTALL AND ACTIVATE OFFICE [] #Manual only
+If the particular set up requires Office, install it now.
+Make sure to install the correct version (Important to discern between pro and non-pro, yearly editions, and 365.
+The method to install depends on the version of office, but generally it follows this pattern:
+Old (pre-2016) version of Office - Install via an ISO on the support drive, use a volume license the client has in their evernote
+Office 2016 or 2019 - Install via the website, or sometimes volume license
+Office 365 - Go to aka.ms/office-install and log in with their account
+Make sure office activates. Go to file > account and make sure you see "Product is activated"
+INSTALL BASICS [] #See Lines 57-71
+INSTALL 3.5 framework [] #See Line 53
+INSTALL AUTOMATE [] #See Cleanup Script Lines 14-22
+INSTALL ANTIVIRUS [] #Cannot be automated
+Look up the client in Evernote and see what AV they use. Install it appropriately
+Note that some AVs are installed via cloud, which can differ drastically from the classic software install method
+INSTALL EXTRA SOFTWARE [] #Cannot be automated
+If needed, call the client and ask them if they need any extra software
+This is especially important for smaller clients
+Examples: A law office might need software for legal documents, an accountant for a company may need quickbooks, and a tax firm might need specialized tax software
+---SHUTDOWN PC--- []
+###############################################
+#>
