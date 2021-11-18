@@ -28,13 +28,13 @@ $installCheck = 'n'
 $officeCheck = $false
 
 #Set F8 to boot to Safe Mode
-cmd.exe \c "bcdedit /set {default} bootmenupolicy legacy"
+cmd /c "bcdedit /set {default} bootmenupolicy legacy"
 
 #Set Percentage for System Protection
-cmd.exe \c "vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%"
+cmd /c "vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%"
 
 #Configure Over Provisioning via TRIM
-cmd.exe \c "fsutil behavior set DisableDeleteNotify 0"
+cmd /c "fsutil behavior set DisableDeleteNotify 0"
 
 # Computer name is set by the deployment package
 
