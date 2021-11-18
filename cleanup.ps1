@@ -26,7 +26,9 @@ Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-tes
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
 
-Start-Process PowerShell.exe '& C:\Support\Scripts\WindowsSetup2_0.ps1'
+#PowerShell -ExecutionPolicy Bypass -File 'C:\Support\Scripts\WindowsSetup2_0.ps1'
+#Start-Process PowerShell.exe '& C:\Support\Scripts\WindowsSetup2_0.ps1'
+Set-ItemProperty -Path . -Name WindowsSetup2 -Value 'PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1'
 
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
