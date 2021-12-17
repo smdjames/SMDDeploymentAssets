@@ -1,4 +1,6 @@
-Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
+#Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
+
+ni "C:\Support\Logs\Sleep.txt"
 
 <#
 
@@ -15,7 +17,9 @@ function Start-Sleep($seconds) {
 
 #>
 
-Start-Sleep -s 300
+Start-Sleep -s 30
+
+ni "C:\Support\Logs\After-Sleep.txt"
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -39,4 +43,4 @@ PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
 
-Stop-Transcript
+#Stop-Transcript
