@@ -28,13 +28,13 @@ $installCheck = 'n'
 $officeCheck = $false
 
 #Set F8 to boot to Safe Mode
-cmd /c "bcdedit /set {default} bootmenupolicy legacy"
+cmd.exe \c "bcdedit /set {default} bootmenupolicy legacy"
 
 #Set Percentage for System Protection
-cmd /c "vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%"
+cmd.exe \c "vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%"
 
 #Configure Over Provisioning via TRIM
-cmd /c "fsutil behavior set DisableDeleteNotify 0"
+cmd.exe \c "fsutil behavior set DisableDeleteNotify 0"
 
 # Computer name is set by the deployment package
 
@@ -526,17 +526,17 @@ $Paint3Dstuff = @(
     }
 
 #Disables some search like bing and indexing
-    Write-Host "Disabling Bing Search in Start Menu..."
+   #Write-Host "Disabling Bing Search in Start Menu..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaConsent" -Type DWord -Value 0
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Name "DisableWebSearch" -Type DWord -Value 1
-    Write-Host "Stopping and disabling Windows Search indexing service..."
+    #Write-Host "Stopping and disabling Windows Search indexing service..."
 	Stop-Service "WSearch" -WarningAction SilentlyContinue
 	Set-Service "WSearch" -StartupType Disabled
-    Write-Host "Hiding Taskbar Search icon / box..."
+    #Write-Host "Hiding Taskbar Search icon / box..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
 
 #Cortana: Hi! I'm Cortana, and I'm here to help.
@@ -580,7 +580,7 @@ $Paint3Dstuff = @(
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoRebootWithLoggedOnUsers" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -ErrorAction SilentlyContinue
 
-# Close debugging log Transcript
+#Close debugging log Transcript
 Stop-Transcript
 
 <#

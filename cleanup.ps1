@@ -1,5 +1,7 @@
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
+<#
+
 function Start-Sleep($seconds) {
     $doneDT = (Get-Date).AddSeconds($seconds)
     while($doneDT -gt (Get-Date)) {
@@ -10,6 +12,10 @@ function Start-Sleep($seconds) {
     }
     Write-Progress -Activity "Sleeping" -Status "Sleeping..." -SecondsRemaining 0 -Completed
 }
+
+#>
+
+Start-Sleep -s 300
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -26,9 +32,9 @@ Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-tes
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
 
-#PowerShell -ExecutionPolicy Bypass -File 'C:\Support\Scripts\WindowsSetup2_0.ps1'
-#Start-Process PowerShell.exe '& C:\Support\Scripts\WindowsSetup2_0.ps1'
-Set-ItemProperty -Path . -Name WindowsSetup2 -Value 'PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1'
+
+PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.ps1
+
 
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
