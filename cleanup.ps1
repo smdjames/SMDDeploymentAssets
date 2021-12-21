@@ -357,7 +357,7 @@ Function Install-Automate {
 } #End Function Install-Automate
 
 
-Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace42389da37eb12f6261f596c2b5f' -Silent -Force -Transcript
+Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace42389da37eb12f6261f596c2b5f5' -Silent -Force -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
