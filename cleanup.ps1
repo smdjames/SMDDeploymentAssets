@@ -31,7 +31,7 @@ REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdmi
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
 # Start Automate installer in quiet mode
-Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
+Start-Process msiexec.exe -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
