@@ -169,7 +169,7 @@ Function Install-Automate {
     $ErrorActionPreference = 'SilentlyContinue'
     $Verbose = If ($PSBoundParameters.Verbose -eq $True) { $True } Else { $False }
     $Error.Clear()
-    If ($Transcript) {Start-Transcript -Path "$($env:windir)\Temp\Automate_Deploy.txt" -Force}
+    If ($Transcript) {Start-Transcript -Path "C:\Support\Logs\Automate_Deploy.txt" -Force}
     $SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
     $SoftwarePath = "C:\Support\Automate"
     $Filename = "Automate_Agent.msi"
@@ -285,7 +285,7 @@ Function Install-Automate {
             If (!$Silent) {Write-Host "Installing Automate Agent to $AutomateURL"}
             Stop-Process -Name "ltsvcmon","lttray","ltsvc","ltclient" -Force -PassThru
             $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
-            $LogFullPath = "$env:windir\Temp\Automate_Agent_$Date.log"
+            $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
             $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i $($SoftwareFullPath) /quiet /norestart LOCATION=$($LocationID) SERVERADDRESS=$($AutomateURL) /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
             Write-Verbose "MSIEXEC Log Files: $LogFullPath"
             If ($InstallExitCode -eq 0) {
@@ -297,7 +297,7 @@ Function Install-Automate {
                 Start-Sleep -s 15
                 Write-Host "Installer will execute twice (KI 12002617)" -ForegroundColor Yellow
                 $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
-                $LogFullPath = "$env:windir\Temp\Automate_Agent_$Date.log"
+                $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
                 $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i $($SoftwareFullPath) /quiet /norestart LOCATION=$($LocationID) SERVERADDRESS=$($AutomateURL) /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
                 Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
                 Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
