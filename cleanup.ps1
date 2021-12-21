@@ -1,6 +1,6 @@
-#Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
+Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
-ni "C:\Support\Logs\Sleep.txt"
+#ni "C:\Support\Logs\Sleep.txt"
 
 <#
 
@@ -19,7 +19,7 @@ function Start-Sleep($seconds) {
 
 Start-Sleep -s 30
 
-ni "C:\Support\Logs\After-Sleep.txt"
+#ni "C:\Support\Logs\After-Sleep.txt"
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -37,10 +37,10 @@ Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-tes
 # Forked from Cole's GitHub repo
 
 
-PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.ps1
+PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0-WIP.ps1
 
 
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
 
-#Stop-Transcript
+Stop-Transcript
