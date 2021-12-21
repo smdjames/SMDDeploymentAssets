@@ -31,13 +31,15 @@ REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdmi
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
 # Start Automate installer in quiet mode
-Start-Process msiexec.exe -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
+$arguments = "/i `"C:\Support\Installers\Automate-test.msi`" /quiet"
+Start-Process msiexec.exe -ArgumentList $arguments -Wait
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
 
 
-PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1
+#PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1
+REG ADD "HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v !WindowsSetup2_0 /t REG_SZ /d 'PowerShell -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1' /f
 
 
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
