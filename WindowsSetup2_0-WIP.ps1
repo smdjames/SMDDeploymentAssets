@@ -14,6 +14,7 @@ Last updated: October 18, 2021
 
 # Create a log file for debugging
 Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
+Set-PSDebug -Trace 1
 
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
@@ -28,13 +29,13 @@ $installCheck = 'n'
 $officeCheck = $false
 
 #Set F8 to boot to Safe Mode
-cmd.exe \c "bcdedit /set {default} bootmenupolicy legacy"
+bcdedit /set {default} bootmenupolicy legacy
 
 #Set Percentage for System Protection
-cmd.exe \c "vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%"
+vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%
 
 #Configure Over Provisioning via TRIM
-cmd.exe \c "fsutil behavior set DisableDeleteNotify 0"
+fsutil behavior set DisableDeleteNotify 0
 
 # Computer name is set by the deployment package
 
