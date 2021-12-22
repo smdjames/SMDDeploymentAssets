@@ -374,6 +374,9 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	# SVCHost Tweak
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value 4194304
 
+#Warn about errors
+Write-Output "WARNING!!! `nErrors in this section indicate that the AppX `nit is trying to uninstall is not present." 
+
 #Finally debloat all the visible stuff
 $Bloatware = @(
 
@@ -583,7 +586,7 @@ $Paint3Dstuff = @(
 #Close debugging log Transcript
 Stop-Transcript
 
-Write-Output "Windows Cleanup and setup finished"
+Write-Output "Windows Setup complete."
 Start-Sleep -s 5
 
 <#
