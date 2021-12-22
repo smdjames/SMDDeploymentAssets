@@ -14,7 +14,6 @@ Last updated: October 18, 2021
 
 # Create a log file for debugging
 Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
-Set-PSDebug -Trace 1
 
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
