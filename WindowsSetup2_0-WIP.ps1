@@ -40,7 +40,7 @@ fsutil behavior set DisableDeleteNotify 0
 
 # Enable system restore on C:\
 
-# Write-Output "`n`nSetting computer name, and enabling system restore..."
+Write-Output "`n`nSetting computer name, and enabling system restore..."
 Enable-ComputerRestore -Drive "$env:SystemDrive"
 
 #Force Restore point to not skip
