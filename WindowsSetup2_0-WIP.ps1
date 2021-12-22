@@ -40,7 +40,7 @@ fsutil behavior set DisableDeleteNotify 0
 
 # Enable system restore on C:\
 
-Write-Output "`n`nSetting computer name, and enabling system restore..."
+Write-Output "Enabling system restore..."
 Enable-ComputerRestore -Drive "$env:SystemDrive"
 
 #Force Restore point to not skip
@@ -94,21 +94,21 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 
     #Get Rid of nasty Windows stuff
     #Disables Windows Feedback Experience
-    #Write-Host "Disabling Windows Feedback Experience program"
+    Write-Output "Disabling Windows Feedback Experience program"
     $Advertising = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo"
     If (Test-Path $Advertising) {
         Set-ItemProperty $Advertising Enabled -Value 0
     }
 
     #Stops Cortana from being used as part of your Windows Search Function
-    #Write-Host "Stopping Cortana from being used as part of your Windows Search Function"
+    Write-Output "Stopping Cortana from being used as part of your Windows Search Function"
     $Search = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
     If (Test-Path $Search) {
         Set-ItemProperty $Search AllowCortana -Value 0
     }
 
     #Disables Web Search in Start Menu
-    #Write-Host "Disabling Bing Search in Start Menu"
+    Write-Output "Disabling Bing Search in Start Menu"
     $WebSearch = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" BingSearchEnabled -Value 0
 	If (!(Test-Path $WebSearch)) {
@@ -117,7 +117,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Set-ItemProperty $WebSearch DisableWebSearch -Value 1
 
     #Stops the Windows Feedback Experience from sending anonymous data
-    #Write-Host "Stopping the Windows Feedback Experience program"
+    Write-Output "Stopping the Windows Feedback Experience program"
     $Period = "HKCU:\Software\Microsoft\Siuf\Rules"
     If (!(Test-Path $Period)) {
     New-Item $Period
@@ -125,7 +125,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     Set-ItemProperty $Period PeriodInNanoSeconds -Value 0
 
     #Prevents bloatware applications from returning and removes Start Menu suggestions
-    #Write-Host "Adding Registry key to prevent bloatware apps from returning"
+    Write-Output "Adding Registry key to prevent bloatware apps from returning"
     $registryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent"
     $registryOEM = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"
     If (!(Test-Path $registryPath)) {
@@ -144,14 +144,14 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
         Set-ItemProperty $registryOEM  SystemPaneSuggestionsEnabled -Value 0
 
     #Preping mixed Reality Portal for removal
-    #Write-Host "Setting Mixed Reality Portal value to 0 so that you can uninstall it in Settings"
+    Write-Output "Setting Mixed Reality Portal value to 0 so that you can uninstall it in Settings"
     $Holo = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Holographic"
     If (Test-Path $Holo) {
         Set-ItemProperty $Holo  FirstRunSucceeded -Value 0
     }
 
     #Disables Wi-fi Sense
-    #Write-Host "Disabling Wi-Fi Sense"
+    Write-Output "Disabling Wi-Fi Sense"
     $WifiSense1 = "HKLM:\SOFTWARE\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting"
     $WifiSense2 = "HKLM:\SOFTWARE\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots"
     $WifiSense3 = "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config"
@@ -166,7 +166,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Set-ItemProperty $WifiSense3  AutoConnectAllowedOEM -Value 0
 
     #Disables live tiles
-    #Write-Host "Disabling live tiles"
+    Write-Output "Disabling live tiles"
     $Live = "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
     If (!(Test-Path $Live)) {
         New-Item $Live
@@ -174,7 +174,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     Set-ItemProperty $Live  NoTileApplicationNotification -Value 1
 
     #Turns off Data Collection via the AllowTelemtry key by changing it to 0
-    #Write-Host "Turning off Data Collection"
+    Write-Output "Turning off Data Collection"
     $DataCollection1 = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection"
     $DataCollection2 = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
     $DataCollection3 = "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection"
@@ -189,7 +189,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     }
 
     #Disabling Location Tracking
-    #Write-Host "Disabling Location Tracking"
+    Write-Output "Disabling Location Tracking"
     $SensorState = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}"
     $LocationConfig = "HKLM:\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration"
     If (!(Test-Path $SensorState)) {
@@ -202,7 +202,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     Set-ItemProperty $LocationConfig Status -Value 0
 
     #Disables People icon on Taskbar
-    #Write-Host "Disabling People icon on Taskbar"
+    Write-Output "Disabling People icon on Taskbar"
     $People = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People"
     If (!(Test-Path $People)) {
         New-Item $People
@@ -210,26 +210,26 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     Set-ItemProperty $People  PeopleBand -Value 0
 
     #Disables scheduled tasks that are considered unnecessary
-    #Write-Host "Disabling scheduled tasks"
+    Write-Output "Disabling scheduled tasks"
     Get-ScheduledTask  XblGameSaveTask | Disable-ScheduledTask
     Get-ScheduledTask  Consolidator | Disable-ScheduledTask
     Get-ScheduledTask  UsbCeip | Disable-ScheduledTask
     Get-ScheduledTask  DmClient | Disable-ScheduledTask
     Get-ScheduledTask  DmClientOnScenarioDownload | Disable-ScheduledTask
 
-    #Write-Host "Stopping and disabling WAP Push Service"
+    Write-Output "Stopping and disabling WAP Push Service"
     #Stop and disable WAP Push Service
 	Stop-Service "dmwappushservice"
 	Set-Service "dmwappushservice" -StartupType Disabled
 
-    #Write-Host "Stopping and disabling Diagnostics Tracking Service"
+    Write-Output "Stopping and disabling Diagnostics Tracking Service"
     #Disabling the Diagnostics Tracking Service
 	Stop-Service "DiagTrack"
 	Set-Service "DiagTrack" -StartupType Disabled
 
     #Kill it...kill it with fire
     #Telemetry
-    #Write-Host "Disabling Telemetry..."
+    Write-Output "Disabling Telemetry..."
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0
@@ -241,7 +241,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Disable-ScheduledTask -TaskName "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" | Out-Null
 
     #App suggestions
-    #Write-Host "Disabling Application suggestions..."
+    Write-Output "Disabling Application suggestions..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "ContentDeliveryAllowed" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "OemPreInstalledAppsEnabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "PreInstalledAppsEnabled" -Type DWord -Value 0
@@ -256,20 +256,20 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Name "DisableWindowsConsumerFeatures" -Type DWord -Value 1
-    #Write-Host "Disabling Activity History..."
+    Write-Output "Disabling Activity History..."
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "EnableActivityFeed" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "PublishUserActivities" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Name "UploadUserActivities" -Type DWord -Value 0
-    #Write-Host "Disabling Location Tracking..."
+    Write-Output "Disabling Location Tracking..."
 	If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" -Name "Value" -Type String -Value "Deny"
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" -Name "SensorPermissionState" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" -Name "Status" -Type DWord -Value 0
-    #Write-Host "Disabling automatic Maps updates..."
+    Write-Output "Disabling automatic Maps updates..."
 	Set-ItemProperty -Path "HKLM:\SYSTEM\Maps" -Name "AutoUpdateEnabled" -Type DWord -Value 0
-    #Write-Host "Disabling Feedback..."
+    Write-Output "Disabling Feedback..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Siuf\Rules")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Siuf\Rules" -Force | Out-Null
 	}
@@ -277,49 +277,49 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "DoNotShowFeedbackNotifications" -Type DWord -Value 1
 	Disable-ScheduledTask -TaskName "Microsoft\Windows\Feedback\Siuf\DmClient" -ErrorAction SilentlyContinue | Out-Null
 	Disable-ScheduledTask -TaskName "Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload" -ErrorAction SilentlyContinue | Out-Null
-    #Write-Host "Disabling Tailored Experiences..."
+    Write-Output "Disabling Tailored Experiences..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent")) {
 		New-Item -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Name "DisableTailoredExperiencesWithDiagnosticData" -Type DWord -Value 1
-    #Write-Host "Disabling Advertising ID..."
+    Write-Output "Disabling Advertising ID..."
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" -Name "DisabledByGroupPolicy" -Type DWord -Value 1
-    #Write-Host "Disabling Error reporting..."
+    Write-Output "Disabling Error reporting..."
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting" -Name "Disabled" -Type DWord -Value 1
 	Disable-ScheduledTask -TaskName "Microsoft\Windows\Windows Error Reporting\QueueReporting" | Out-Null
-    #Write-Host "Restricting Windows Update P2P only to local network..."
+    Write-Output "Restricting Windows Update P2P only to local network..."
 	If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" | Out-Null
 	}
 	#A lot more nasty stuff
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" -Name "DODownloadMode" -Type DWord -Value 1
-    #Write-Host "Stopping and disabling Diagnostics Tracking Service..."
+    Write-Output "Stopping and disabling Diagnostics Tracking Service..."
 	Stop-Service "DiagTrack" -WarningAction SilentlyContinue
 	Set-Service "DiagTrack" -StartupType Disabled
-    #Write-Host "Stopping and disabling WAP Push Service..."
+    Write-Output "Stopping and disabling WAP Push Service..."
 	Stop-Service "dmwappushservice" -WarningAction SilentlyContinue
 	Set-Service "dmwappushservice" -StartupType Disabled
-    #Write-Host "Enabling F8 boot menu options..."
+    Write-Output "Enabling F8 boot menu options..."
 	bcdedit /set `{current`} bootmenupolicy Legacy | Out-Null
-    #Write-Host "Disabling Remote Assistance..."
+    Write-Output "Disabling Remote Assistance..."
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Remote Assistance" -Name "fAllowToGetHelp" -Type DWord -Value 0
-    #Write-Host "Disabling Storage Sense..."
+    Write-Output "Disabling Storage Sense..."
 	Remove-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" -Recurse -ErrorAction SilentlyContinue
-    #Write-Host "Stopping and disabling Superfetch service..."
+    Write-Output "Stopping and disabling Superfetch service..."
 	Stop-Service "SysMain" -WarningAction SilentlyContinue
 	Set-Service "SysMain" -StartupType Disabled
-    #Write-Host "Setting BIOS time to UTC..."
+    Write-Output "Setting BIOS time to UTC..."
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" -Name "RealTimeIsUniversal" -Type DWord -Value 1
-    #Write-Host "Disabling Hibernation..."
+    Write-Output "Disabling Hibernation..."
 	Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernteEnabled" -Type Dword -Value 0
 	If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings")) {
 		New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" -Name "ShowHibernateOption" -Type Dword -Value 0
-    #Write-Host "Showing task manager details..."
+    Write-Output "Showing task manager details..."
 	$taskmgr = Start-Process -WindowStyle Hidden -FilePath taskmgr.exe -PassThru
 	Do {
 		Start-Sleep -Milliseconds 100
@@ -328,21 +328,21 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Stop-Process $taskmgr
 	$preferences.Preferences[28] = 0
 	Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\TaskManager" -Name "Preferences" -Type Binary -Value $preferences.Preferences
-    #Write-Host "Showing file operations details..."
+    Write-Output "Showing file operations details..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" | Out-Null
 	}
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\OperationStatusManager" -Name "EnthusiastMode" -Type DWord -Value 1
-    #Write-Host "Hiding Task View button..."
+    Write-Output "Hiding Task View button..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
-    #Write-Host "Hiding People icon..."
+    Write-Output "Hiding People icon..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" | Out-Null
 	}
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
-    #Write-Host "Showing all tray icons..."
+    Write-Output "Showing all tray icons..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "EnableAutoTray" -Type DWord -Value 0
-	#Write-Host "Enabling NumLock after startup..."
+	Write-Output "Enabling NumLock after startup..."
 	If (!(Test-Path "HKU:")) {
 		New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null
 	}
@@ -354,7 +354,7 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	}
 
     #Unpins all tiles from the Start Menu
-    #Write-Host "Unpinning all tiles from the start menu"
+    Write-Output "Unpinning all tiles from the start menu"
     (New-Object -Com Shell.Application).
     NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').
     Items() |
@@ -362,10 +362,10 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
     ?{$_.Name -match 'Un.*pin from Start'} |
 
     #Y this work but throw error?
-    #Write-Host "Changing default Explorer view to This PC"
+    Write-Output "Changing default Explorer view to This PC"
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWord -Value 1
 
-    #Write-Host "Hiding 3D Objects icon from This PC..."
+    Write-Output "Hiding 3D Objects icon from This PC..."
 	Remove-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{0DB7E03F-FC29-4DC6-9020-FF41B59E513A}" -Recurse -ErrorAction SilentlyContinue
 
     # Network Tweaks
@@ -462,16 +462,16 @@ $Bloatware = @(
     foreach ($Bloat in $Bloatware) {
         Get-AppxPackage -AllUsers -Name $Bloat| Remove-AppxPackage
         Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
-        #Write-Host "Trying to remove $Bloat."
+        Write-Output "Trying to remove $Bloat."
     }
 
     #Install Media Player because Why not
-    #Write-Host "Installing Windows Media Player..."
+    Write-Output "Installing Windows Media Player..."
     #Works outside Windows Sandbox.
 	Enable-WindowsOptionalFeature -FeatureName "WindowsMediaPlayer" -All -Online -NoRestart -WarningAction SilentlyContinue | Out-Null
 
     #Stops edge from taking over as the default .PDF viewer
-    #Write-Host "Stopping Edge from taking over as the default .PDF viewer"
+    Write-Output "Stopping Edge from taking over as the default .PDF viewer"
 	# Identify the edge application class
 	$Packages = "HKCU:SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\Repository\Packages"
 	$edge = Get-ChildItem $Packages -Recurse -include "MicrosoftEdge"
@@ -526,22 +526,22 @@ $Paint3Dstuff = @(
     }
 
 #Disables some search like bing and indexing
-   #Write-Host "Disabling Bing Search in Start Menu..."
+   Write-Output "Disabling Bing Search in Start Menu..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "BingSearchEnabled" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "CortanaConsent" -Type DWord -Value 0
 	If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search")) {
 		New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Force | Out-Null
 	}
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Name "DisableWebSearch" -Type DWord -Value 1
-    #Write-Host "Stopping and disabling Windows Search indexing service..."
+    Write-Output "Stopping and disabling Windows Search indexing service..."
 	Stop-Service "WSearch" -WarningAction SilentlyContinue
 	Set-Service "WSearch" -StartupType Disabled
-    #Write-Host "Hiding Taskbar Search icon / box..."
+    Write-Output "Hiding Taskbar Search icon / box..."
 	Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
 
 #Cortana: Hi! I'm Cortana, and I'm here to help.
 #Me: NOT FOR LONG HEATHEN!
-    #Write-Host "Disabling Cortana..."
+    Write-Output "Disabling Cortana..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Force | Out-Null
 	}
@@ -562,27 +562,28 @@ $Paint3Dstuff = @(
 
 
 #Diable UAC and disable other Windows 'Security'
-    #Write-Host "Lowering UAC level..."
+    Write-Output "Lowering UAC level..."
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Type DWord -Value 0
 	Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "PromptOnSecureDesktop" -Type DWord -Value 0
 
-    #Write-Host "Disabling Meltdown (CVE-2017-5754) compatibility flag..."
+    Write-Output "Disabling Meltdown (CVE-2017-5754) compatibility flag..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\QualityCompat" -Name "cadca5fe-87d3-4b96-b7fb-a231484277cc" -ErrorAction SilentlyContinue
 
 #Normal Windows Update
-    #Write-Host "Enabling driver offering through Windows Update..."
+    Write-Output "Enabling driver offering through Windows Update..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -ErrorAction SilentlyContinue
-    #Write-Host "Enabling Windows Update automatic restart..."
+    Write-Output "Enabling Windows Update automatic restart..."
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoRebootWithLoggedOnUsers" -ErrorAction SilentlyContinue
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -ErrorAction SilentlyContinue
 
 #Close debugging log Transcript
 Stop-Transcript
 
+Write-Output "Windows Cleanup and setup finished"
 Start-Sleep -s 5
 
 <#

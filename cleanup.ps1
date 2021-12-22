@@ -1,3 +1,5 @@
+Write-Output "Windows Deployment will now begin. `n Please refer to logs for review."
+
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
 # Sleep to let registry populate
@@ -346,6 +348,7 @@ iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
 # Removes install directories except logs
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 
+Write-Output "Windows deployment complete. `nThis window will close in 5 seconds."
 Start-Sleep -s 5
 
 Stop-Transcript
