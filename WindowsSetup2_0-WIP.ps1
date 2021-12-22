@@ -542,7 +542,7 @@ $Paint3Dstuff = @(
 
 #Cortana: Hi! I'm Cortana, and I'm here to help.
 #Me: NOT FOR LONG HEATHEN!
-    Write-Host "Disabling Cortana..."
+    #Write-Host "Disabling Cortana..."
 	If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings")) {
 		New-Item -Path "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" -Force | Out-Null
 	}
