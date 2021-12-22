@@ -364,8 +364,8 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace4
 
 
 #PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1
-#iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JRX47'))
-iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
+iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JyJeb'))
+#iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
 
 
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
