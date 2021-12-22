@@ -363,7 +363,8 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace4
 # Forked from Cole's GitHub repo
 
 
-PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1
+#PowerShell.exe -ExecutionPolicy Bypass -File 
+C:\Support\Scripts\WindowsSetup2_0.ps1
 
 
 
