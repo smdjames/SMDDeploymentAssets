@@ -28,7 +28,7 @@ $installCheck = 'n'
 $officeCheck = $false
 
 #Set F8 to boot to Safe Mode
-bcdedit /set {default} bootmenupolicy legacy
+bcdedit /set "{current}" bootmenupolicy legacy
 
 #Set Percentage for System Protection
 vssadmin resize shadowstorage /for=C: /on=C: /maxsize=5%
@@ -582,6 +582,8 @@ $Paint3Dstuff = @(
 
 #Close debugging log Transcript
 Stop-Transcript
+
+Start-Sleep -s 5
 
 <#
 ###############################################

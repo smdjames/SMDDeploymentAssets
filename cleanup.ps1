@@ -1,25 +1,7 @@
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
-#ni "C:\Support\Logs\Sleep.txt"
-
-<#
-
-function Start-Sleep($seconds) {
-    $doneDT = (Get-Date).AddSeconds($seconds)
-    while($doneDT -gt (Get-Date)) {
-        $secondsLeft = $doneDT.Subtract((Get-Date)).TotalSeconds
-        $percent = ($seconds - $secondsLeft) / $seconds * 100
-        Write-Progress -Activity "Sleeping" -Status "Sleeping..." -SecondsRemaining $secondsLeft -PercentComplete $percent
-        [System.Threading.Thread]::Sleep(300000)
-    }
-    Write-Progress -Activity "Sleeping" -Status "Sleeping..." -SecondsRemaining 0 -Completed
-}
-
-#>
-
+# Sleep to let registry populate
 Start-Sleep -s 30
-
-#ni "C:\Support\Logs\After-Sleep.txt"
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -30,11 +12,7 @@ REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdmi
 # Remove stored credentials
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
-
-# Start Automate installer in quiet mode
-#$arguments = "/i `"C:\Support\Installers\Automate-test.msi`" /quiet"
-#Start-Process msiexec.exe -ArgumentList $arguments -Wait
-
+# Function by Chuck Fowler to install Automate & ScreenConnect
 Function Install-Automate {
 <#
 .SYNOPSIS
@@ -356,19 +334,20 @@ Function Install-Automate {
     If ($Transcript) {Stop-Transcript}
 } #End Function Install-Automate
 
-
+# One-line command installs Automate into install-temp
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace42389da37eb12f6261f596c2b5f5' -Silent -Force -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
 
+#iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JyJeb'))
+iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
 
-#PowerShell.exe -ExecutionPolicy Bypass -File C:\Support\Scripts\WindowsSetup2_0.ps1
-iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JyJeb'))
-#iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
-
-
+# Removes install directories except logs
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
 Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
+Remove-Item -Path 'C:\Support\Automate' -Recurse -Verbose
+
+Start-Sleep -s 5
 
 Stop-Transcript
