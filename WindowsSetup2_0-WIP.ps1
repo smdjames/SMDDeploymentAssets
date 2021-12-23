@@ -51,6 +51,7 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" /V "Sy
 #Disable sleep timers and create a restore point just in case
 Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
 
+Write-Host -ForegroundColor Green "Set Power options and Time Zone"
 powercfg.exe -change -monitor-timeout-ac 0
 powercfg.exe -change -monitor-timeout-dc 0
 powercfg.exe -change -disk-timeout-ac 0
@@ -61,10 +62,13 @@ powercfg.exe -change -hibernate-timeout-ac 0
 powercfg.exe -change -hibernate-timeout-dc 0
 #Set Mountain Time Zone
 Set-TimeZone -Id "Mountain Standard Time"
+
+Write-Host -ForegroundColor Green "Enable .NET Framework"
 Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
 
 ##########Essential Tweaks from Cole##########
 
+Write-Host -ForegroundColor Green "Install Chocolatey to automate basic programs"
 #install Chocolatey and other programs
 	Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 	choco install chocolatey-core.extension -y
@@ -82,15 +86,16 @@ Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
     choco install adobereader -y
 
 #Install 7-zip
-#    choco install 7zip -y
+    choco install 7zip -y
 
-#Use O&O Shutup to automate a lot
+Write-Host -ForegroundColor Green "Use O&O Shutup to automate removal of spyware"
     Import-Module BitsTransfer
     # choco install shutup10 -y
 	Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination C:\Support\Installers\OOSU10.exe
 	C:\Support\Installers\OOSU10.exe C:\Support\Installers\ooshutup10.cfg /quiet
 
 #Sets all NICs powersave and wake-on-lan modes correctly
+Write-Host -ForegroundColor Green "Enable wake on LAN"
 Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*' -or $_.Name -like '*Wi-Fi*'} | Set-NetAdapterPowerManagement -ArpOffload enabled -NSOffload enabled -DeviceSleepOnDisconnect disabled -SelectiveSuspend disabled -WakeOnMagicPacket enabled -WakeOnPattern enabled
 
 
@@ -377,7 +382,10 @@ Get-NetAdapter | where {$_.Name -like "*ethernet*" -or $_.Name -like '*wireless*
 	Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control" -Name "SvcHostSplitThresholdInKB" -Type DWord -Value 4194304
 
 #Warn about errors
-Write-Host -ForegroundColor Green "WARNING!!! `nErrors in this section indicate that the AppX `nit is trying to uninstall is not present." 
+Write-Host -ForegroundColor Red "WARNING!!! `nErrors in this section indicate that the AppX `nit is trying to uninstall is not present." 
+
+#sleep to read warning
+Start-Sleep -s 5
 
 #Finally debloat all the visible stuff
 $Bloatware = @(
@@ -589,6 +597,7 @@ $Paint3Dstuff = @(
 Stop-Transcript
 
 Write-Host -ForegroundColor Green "Windows Setup complete."
+#Sleep to read completion
 Start-Sleep -s 5
 
 <#
