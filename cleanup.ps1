@@ -344,8 +344,6 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace4
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
-
-#iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/JyJeb'))
 iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
 
 # Removes install directories except logs

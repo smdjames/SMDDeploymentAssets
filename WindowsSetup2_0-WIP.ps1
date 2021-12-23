@@ -28,6 +28,7 @@ $installCheck = 'n'
 $officeCheck = $false
 
 #Set F8 to boot to Safe Mode
+Write-Host "Setting boot menu to legacy" -ForegroundColor Green
 bcdedit /set "{current}" bootmenupolicy legacy
 
 #Set Percentage for System Protection
