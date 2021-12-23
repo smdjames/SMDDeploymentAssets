@@ -1,4 +1,4 @@
-Write-Host "Windows Deployment will now begin. `nPlease refer to logs for review." -ForegroundColor Green
+Write-Host -ForegroundColor Green "Windows Deployment will now begin. `nPlease refer to logs for review."
 
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
@@ -12,12 +12,12 @@ reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperi
 REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f
 
 # Remove stored credentials
-Write-Output "This will error out. This is expected. `nThe action takes place as expected."
+Write-Host -ForegroundColor Green "This will error out. This is expected. `nThe action takes place as expected."
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
 
 # Function by Chuck Fowler to install Automate & ScreenConnect
-Write Output "It is expected that Automate will fail on the first attempt."
+Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
 Function Install-Automate {
 <#
 .SYNOPSIS
