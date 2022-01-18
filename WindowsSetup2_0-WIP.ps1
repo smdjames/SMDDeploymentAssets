@@ -71,6 +71,7 @@ $officeCheck = $false
 #Create CutLocAdmin
 $Password = Read-Host "Please set the password for CustLocAdmin" -AsSecureString
 New-LocalUser -Name "CustLocAdmin" -Password $Password -PasswordNeverExpires
+Add-LocalGroupMember -Group "Administrators" -Member "CustLocAdmin"
 
 #Set F8 to boot to Safe Mode
 Write-Host -ForegroundColor Green "Setting boot menu to legacy"
