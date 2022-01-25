@@ -1,3 +1,20 @@
+<#
+Company: SystemsMD
+Contact: james@systemsmd.com
+Created: October 15, 2021
+Last Modified: January 25, 2022
+
+Credits:
+James McGee created the basis of this script
+Cole Bermudez added on and modified
+Last Updated: January 25, 2022
+
+Change Log:
+1/25/2022
+Changes By Cole Bermudez:
+-Added lines 342-371 as a basis for dynamic installation of Automate once a CSV of Tokens is compiled.
+#>
+
 Write-Host -ForegroundColor Green "Windows Deployment will now begin. `nPlease refer to logs for review."
 
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
@@ -12,11 +29,12 @@ reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperi
 REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f
 
 # Remove stored credentials
-Write-Host -ForegroundColor Green "This will error out. This is expected. `nThe action takes place as expected."
+Write-Host -ForegroundColor Green "This will error out. This is expected. The action takes place as expected."
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
 
 # Function by Chuck Fowler to install Automate & ScreenConnect
+# Chuck's code: https://github.com/braingears
 Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
 Function Install-Automate {
 <#
@@ -338,6 +356,37 @@ Function Install-Automate {
     } # End 
     If ($Transcript) {Stop-Transcript}
 } #End Function Install-Automate
+
+<#
+###The Following code makes Automate Dynamic using CSV and global variable calls
+
+#Import a CSV containing Location ID's and Client names
+$ClientList = Import-CSV -Path "C:\Support\Clients.csv"
+
+#Print the CSV to the screen in a table
+Write-output $ClientList | Format-Table LocationID, Client
+
+#Enter the Location ID that corresponds to the Client
+$ClientSelection = Read-Host "Please select a client (enter a number)"
+
+$Import a CSV of Tokens with a unique identifier
+$TokenList = Import-CSV -Path "C:\Support\CSVs\TokenList.csv"
+
+#Set a new Variable and equal it to the ClientSelection
+
+$i=$ClientSelection
+#Write-Output $i
+#Set The TokenID to read TokenList
+$TokenID = $TokenList[$i-1] #Not sure why the '-1' is needed. Something with how Powershell pases CSVs
+ 
+#Set argument values for Automate line
+$LocID = $ClientSelection
+$Token = $TokenID.Token
+
+#Write-Output $Token
+
+Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $Token -Silent -Force -Transcript
+#>
 
 # One-line command installs Automate into install-temp
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace42389da37eb12f6261f596c2b5f5' -Silent -Force -Transcript
