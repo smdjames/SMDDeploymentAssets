@@ -517,7 +517,7 @@ $Bloatware = @(
     "Microsoft.MinecraftUWP"
     "Microsoft.GamingServices"
     "Microsoft.WindowsReadingList"
-    "Microsoft.GetHelp"
+    #"Microsoft.GetHelp"
     "Microsoft.Getstarted"
     "Microsoft.Messaging"
     "Microsoft.Microsoft3DViewer"
