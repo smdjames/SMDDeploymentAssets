@@ -46,7 +46,7 @@ WindowsSetup does the following:
 
 To run Windows Setup use this in Powershell admin:
 
-```rb.gy/8ctc3b```
+```iex ((New-Object System.Net.WebClient).DownloadString('rb.gy/8ctc3b'))```
 
 OR
 
