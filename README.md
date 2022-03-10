@@ -42,3 +42,12 @@ WindowsSetup does the following:
 - Diables UAC and other 'security'
 - Stops Windows Update up to 3 years and set for Security updates only.
 - Displays a completion message
+
+
+To run Windows Setup use this in Powershell admin:
+
+```iex ((New-Object System.Net.WebClient).DownloadString('rb.gy/8ctc3b'))```
+
+OR
+
+```iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/WindowsSetup2_0-WIP.ps1'))```
