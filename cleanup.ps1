@@ -377,7 +377,7 @@ $TokenList = Import-CSV -Path "C:\Support\CSVs\TokenList.csv"
 $i=$ClientSelection
 #Write-Output $i
 #Set The TokenID to read TokenList
-$TokenID = $TokenList[$i-1] #Not sure why the '-1' is needed. Something with how Powershell pases CSVs
+$TokenID = $TokenList[$i-1] #Not sure why the '-1' is needed. Something with how Powershell parses CSVs
  
 #Set argument values for Automate line
 $LocID = $ClientSelection
@@ -389,7 +389,7 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $To
 #>
 
 # One-line command installs Automate into install-temp
-Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '2ace42389da37eb12f6261f596c2b5f5' -Silent -Force -Transcript
+Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '4fbd003e0cddacfa0e299b83ffc502de' -Silent -Force -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
