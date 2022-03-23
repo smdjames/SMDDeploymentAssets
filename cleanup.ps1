@@ -20,7 +20,7 @@ Write-Host -ForegroundColor Green "Windows Deployment will now begin. `nPlease r
 Start-Transcript -Append C:\Support\Logs\PostDeploymentCleanupLog.txt
 
 # Sleep to let registry populate
-Start-Sleep -s 30
+Start-Sleep -s 60
 
 # Reset Privacy settings to default
 reg delete HKLM\SOFTWARE\Policies\Microsoft\Windows\OOBE /v DisablePrivacyExperience /f
@@ -387,7 +387,9 @@ $Token = $TokenID.Token
 
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $Token -Silent -Force -Transcript
 #>
-
+#sleep to ensure msiexec is available to run
+Write-Host "Ensuring msiexec is avaiable"
+Start-Sleep -s 120
 # One-line command installs Automate into install-temp
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token 'a9ef77a14e8689931d65f3f0ee5e4b7b' -Transcript
 
