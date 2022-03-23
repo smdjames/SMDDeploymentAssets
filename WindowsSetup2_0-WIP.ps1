@@ -143,7 +143,6 @@ Write-Warning "Errors past this point indicate one of two things `n1.The service
 Start-Sleep 15
 
     Write-Host  -ForegroundColor Green "Running O&O Shutup with Recommended Settings"
-    $ResultText.text += "`r`n" +"Running O&O Shutup with Recommended Settings"
     Import-Module BitsTransfer
     Start-BitsTransfer -Source "https://https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/ooshutup10.cfg" -Destination ooshutup10.cfg
     Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe

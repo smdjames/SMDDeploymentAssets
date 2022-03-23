@@ -390,11 +390,8 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $To
 #sleep to ensure msiexec is available to run
 Write-Host "Ensuring msiexec is avaiable"
 Start-Sleep -s 60
-#Kill msiexec.exe process
-$process = Get-Process msiexec.exe
-$process.Kill()
 # One-line command installs Automate into install-temp
-Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token 'a9ef77a14e8689931d65f3f0ee5e4b7b' -Transcript
+Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token 'a9ef77a14e8689931d65f3f0ee5e4b7b' -Silent -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
