@@ -389,7 +389,7 @@ Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $To
 #>
 
 # One-line command installs Automate into install-temp
-Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '4fbd003e0cddacfa0e299b83ffc502de' -Silent -Force -Transcript
+Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token '4fbd003e0cddacfa0e299b83ffc502de' -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
