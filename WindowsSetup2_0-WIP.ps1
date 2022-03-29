@@ -143,9 +143,9 @@ Write-Warning "Errors past this point indicate one of two things `n1.The service
 Start-Sleep 15
 
     Write-Host  -ForegroundColor Green "Running O&O Shutup with Recommended Settings"
-    Import-Module BitsTransfer
-    Start-BitsTransfer -Source "https://https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/ooshutup10.cfg" -Destination ooshutup10.cfg
-    Start-BitsTransfer -Source "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -Destination OOSU10.exe
+    Invoke-WebRequest -Uri "https://https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/ooshutup10.cfg" -Outfile "C:\Support\Scripts\ooshutup10.cfg"
+    Invoke-WebRequest -Uri "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -outFile "C:\Support\Script\OOSU10.exe"
+    cd C:\Support\Scripts
     ./OOSU10.exe ooshutup10.cfg /quiet
 
     Write-Host  -ForegroundColor Green "Disabling Telemetry..."
@@ -663,6 +663,9 @@ Stop-Transcript
 Write-Host -ForegroundColor Green "Windows Setup complete."
 #Sleep to read completion
 Start-Sleep -s 5
+Write-Host -ForegroundColor Green "The Computer will restart in 10 seconds"
+Start-Sleep -s 10
+Restart-Computer
 
 <#
 ###############################################
