@@ -594,8 +594,8 @@ $Bloatware = @(
     Write-Host  -ForegroundColor Green "Removing Bloatware"
 
     foreach ($Bloat in $Bloatware) {
-        Get-AppxPackage -Name $Bloat| Remove-AppxPackage -ErrorAction SilentlyContinue
-        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+        Get-AppxPackage -Name $Bloat -ErrorAction SilentlyContinue| Remove-AppxPackage
+        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat -ErrorAction SilentlyContinue | Remove-AppxProvisionedPackage -Online
         Write-Host  -ForegroundColor Green "Trying to remove $Bloat."
         $ResultText.text = "`r`n" +"`r`n" + "Trying to remove $Bloat."
     }
