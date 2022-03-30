@@ -412,7 +412,7 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies
 )
 
 foreach ($service in $services) {
-    # -ErrorAction SilentlyContinue is so it doesn't write an error to stdout if a service doesn't exist
+    #-ErrorAction SilentlyContinue is so it doesn't write an error to stdout if a service doesn't exist
 
     Write-Host  -ForegroundColor Green "Setting $service StartupType to Manual"
     Get-Service -Name $service -ErrorAction SilentlyContinue | Set-Service -StartupType Manual
@@ -594,8 +594,8 @@ $Bloatware = @(
     Write-Host  -ForegroundColor Green "Removing Bloatware"
 
     foreach ($Bloat in $Bloatware) {
-        Get-AppxPackage -Name $Bloat| Remove-AppxPackage
-        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online
+        Get-AppxPackage -Name $Bloat| Remove-AppxPackage -ErrorAction SilentlyContinue
+        Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $Bloat | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
         Write-Host  -ForegroundColor Green "Trying to remove $Bloat."
         $ResultText.text = "`r`n" +"`r`n" + "Trying to remove $Bloat."
     }
