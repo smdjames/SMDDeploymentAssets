@@ -138,6 +138,17 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 #Install 7-zip
     choco install 7zip -y
 
+#Enable RDP
+Write-Host -ForegroundColor Green "Enable RDP"
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+netsh advfirewall firewall set rule group="remote desktop" new enable=yes
+Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+#add SMD user to Remote Desktop Users
+Write-Host -ForegroundColor Green "Add SMD user to Remote Users"
+Add-LocalGroupMember -Group "Remote Desktop Users" -Member "SystemsMD"
+
 #Warn about errors
 Write-Warning "Errors past this point indicate one of two things `n1.The service is already set to manual `n2.The AppX Package is not installed"
 Start-Sleep 15
