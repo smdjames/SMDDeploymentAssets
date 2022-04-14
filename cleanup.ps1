@@ -32,6 +32,23 @@ REG ADD "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdmi
 Write-Host -ForegroundColor Green "This will error out. This is expected. The action takes place as expected."
 REG DELETE "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword /f
 
+#Create CSV directory in Support
+New-Item -ItemType Directory -Force -Path C:\Support\CSVs
+#Download CSVs from GitHub
+Start-BitsTransfer -Source "https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/Clients.csv" -Destination "C:\Support\CSVs\Clients.csv"
+Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/TokenList.csv -OutFile C:\Support\CSVs\TokenList.csv
+
+
+Write-Warning "The following list of clients is in Numerical order." 
+Write-Warning "Please be careful in selecting the client. Some numbers are skipped."
+Write-Warning "Not all departments for a client are grouped together. Look carefully."
+Write-Warning "If a client site is not listed, please alert Cole Bermudez."
+
+#wait for user to press enter so they read the warnings
+Write-Host "Press any key to continue ....."
+$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+
 # Function by Chuck Fowler to install Automate & ScreenConnect
 # Chuck's code: https://github.com/braingears
 Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
@@ -355,21 +372,6 @@ Function Install-Automate {
     } # End 
     If ($Transcript) {Stop-Transcript}
 } #End Function Install-Automate
-
-#Create CSV directory in Support
-New-Item -ItemType Directory -Force -Path C:\Support\CSVs
-#Download CSVs from GitHub
-Start-BitsTransfer -Source "https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/Clients.csv" -Destination "C:\Support\CSVs\Clients.csv"
-Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/TokenList.csv -OutFile C:\Support\CSVs\TokenList.csv
-
-
-Write-Warning "The following list of clients is in Numerical order." 
-Write-Warning "Please be careful in selecting the client. Some numbers are skipped."
-Write-Warning "Not all departments for a client are grouped together. Look carefully."
-Write-Warning "If a client site is not listed, please alert Cole Bermudez."
-
-#wait for user to press enter so they read the warnings
-read-host “Press ENTER to continue...”
 
 
 ###The Following code makes Automate Dynamic using CSV and global variable calls
