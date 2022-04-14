@@ -356,6 +356,12 @@ Function Install-Automate {
     If ($Transcript) {Stop-Transcript}
 } #End Function Install-Automate
 
+#Create CSV directory in Support
+New-Item -ItemType Directory -Force -Path C:\Support\CSVs
+#Download CSVs from GitHub
+Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/Clients.csvv -OutFile C:\Support\CSVs\Clients.csv
+Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/TokenList.csv -OutFile C:\Support\CSVs\TokenList.csv
+
 
 Write-Warning "The following list of clients is in Numerical order." 
 Write-Warning "Please be careful in selecting the client. Some numbers are skipped."
@@ -369,7 +375,7 @@ read-host “Press ENTER to continue...”
 ###The Following code makes Automate Dynamic using CSV and global variable calls
 
 #Import a CSV with a list of location IDs and
-$ClientList = Import-CSV -Path "C:\Users\Public\Documents\Clients.csv"
+$ClientList = Import-CSV -Path "C:\Support\CSVs\Clients.csv"
 
 #Write the Location IDs and Client names to the screen
 Write-output $ClientList | Format-Table LocationID, Client
@@ -378,7 +384,7 @@ Write-output $ClientList | Format-Table LocationID, Client
 $ClientSelection = Read-Host "Please select a client (enter a number)"
 
 #Import a Token List
-$TokenList = Import-CSV -Path "C:\Users\Public\Documents\TokenList.csv"
+$TokenList = Import-CSV -Path "C:\Support\CSVs\TokenList.csv"
 
 #Create another Global Variable for one line install
 $LocID = $ClientSelection
