@@ -1,5 +1,5 @@
 ﻿#Import a CSV with a list of location IDs and
-$ClientList = Import-CSV -Path "C:\Support\Clients.csv"
+$ClientList = Import-CSV -Path "C:\Support\CSVs\Clients.csv"
 
 #Write the Location IDs and Client names to the screen
 Write-output $ClientList | Format-Table LocationID, Client
@@ -17,7 +17,7 @@ $LocID = $ClientSelection
 #Test selection output
 $i=$ClientSelection
 Write-Output $i
-$TokenID = $TokenList[$i-1] #For some reason ID needs to subtract one to set correctly
+$TokenID = $TokenList[$i-1] 
 $Token = $TokenID.Token
 
 #Test Token output 

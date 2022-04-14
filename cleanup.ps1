@@ -357,41 +357,54 @@ Function Install-Automate {
     If ($Transcript) {Stop-Transcript}
 } #End Function Install-Automate
 
-<#
+#Create CSV directory in Support
+New-Item -ItemType Directory -Force -Path C:\Support\CSVs
+#Download CSVs from GitHub
+
+
+Write-Warning "The following list of clients is in Numerical order." 
+Write-Warning "Please be careful in selecting the client. Some numbers are skipped."
+Write-Warning "Not all departments for a client are grouped together. Look carefully."
+Write-Warning "If a client site is not listed, please alert Cole Bermudez."
+
+#wait for user to press enter so they read the warnings
+read-host “Press ENTER to continue...”
+
+
 ###The Following code makes Automate Dynamic using CSV and global variable calls
 
-#Import a CSV containing Location ID's and Client names
-$ClientList = Import-CSV -Path "C:\Support\Clients.csv"
+#Import a CSV with a list of location IDs and
+$ClientList = Import-CSV -Path "C:\Support\CSVs\Clients.csv"
 
-#Print the CSV to the screen in a table
+#Write the Location IDs and Client names to the screen
 Write-output $ClientList | Format-Table LocationID, Client
 
-#Enter the Location ID that corresponds to the Client
+#Have the user select a client
 $ClientSelection = Read-Host "Please select a client (enter a number)"
 
-$Import a CSV of Tokens with a unique identifier
+#Import a Token List
 $TokenList = Import-CSV -Path "C:\Support\CSVs\TokenList.csv"
 
-#Set a new Variable and equal it to the ClientSelection
-
-$i=$ClientSelection
-#Write-Output $i
-#Set The TokenID to read TokenList
-$TokenID = $TokenList[$i-1] #Not sure why the '-1' is needed. Something with how Powershell parses CSVs
- 
-#Set argument values for Automate line
+#Create another Global Variable for one line install
 $LocID = $ClientSelection
+
+
+#Test selection output
+$i=$ClientSelection
+Write-Output $i
+$TokenID = $TokenList[$i-1] 
 $Token = $TokenID.Token
 
-#Write-Output $Token
+#Test Token output 
+Write-Output $Token
 
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $Token -Silent -Force -Transcript
-#>
+
 #sleep to ensure msiexec is available to run
-Write-Host "Ensuring msiexec is avaiable"
-Start-Sleep -s 60
+#Write-Host "Ensuring msiexec is avaiable"
+#Start-Sleep -s 60
 # One-line command installs Automate into install-temp
-Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token 'a9ef77a14e8689931d65f3f0ee5e4b7b' -Silent -Transcript
+#Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID 231 -Token 'a9ef77a14e8689931d65f3f0ee5e4b7b' -Silent -Transcript
 
 # Run WindowsSetup2_0-WIP
 # Forked from Cole's GitHub repo
