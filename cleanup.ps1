@@ -360,6 +360,8 @@ Function Install-Automate {
 #Create CSV directory in Support
 New-Item -ItemType Directory -Force -Path C:\Support\CSVs
 #Download CSVs from GitHub
+Invoke-WebRequest https://github.com/smdjames/SMDDeploymentAssets/blob/main/Clients.csv -OutFile C:\Support\CSVs\Clients.csv
+Invoke-WebRequest https://github.com/smdjames/SMDDeploymentAssets/blob/main/TokenList.csv -OutFile C:\Support\CSVs\TokenList.csv
 
 
 Write-Warning "The following list of clients is in Numerical order." 
