@@ -394,12 +394,12 @@ $LocID = $ClientSelection
 
 #Test selection output
 $i=$ClientSelection
-Write-Output $i
+#Write-Output $i
 $TokenID = $TokenList[$i-1] 
 $Token = $TokenID.Token
 
 #Test Token output 
-Write-Output $Token
+#Write-Output $Token
 
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $Token -Silent -Force -Transcript
 
