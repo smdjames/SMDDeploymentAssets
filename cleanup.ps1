@@ -359,7 +359,7 @@ Function Install-Automate {
 #Create CSV directory in Support
 New-Item -ItemType Directory -Force -Path C:\Support\CSVs
 #Download CSVs from GitHub
-Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/Clients.csvv -OutFile C:\Support\CSVs\Clients.csv
+Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/Clients.csv -OutFile C:\Support\CSVs\Clients.csv
 Invoke-WebRequest https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/TokenList.csv -OutFile C:\Support\CSVs\TokenList.csv
 
 
