@@ -45,9 +45,10 @@ Write-Warning "Not all departments for a client are grouped together. Look caref
 Write-Warning "If a client site is not listed, please alert Cole Bermudez."
 
 #wait for user to press enter so they read the warnings
-Write-Host "Press any key to continue ....."
-$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+#Write-Host "Press any key to continue ...."
+#$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 
+[void][System.Console]::ReadKey($true)
 
 # Function by Chuck Fowler to install Automate & ScreenConnect
 # Chuck's code: https://github.com/braingears
