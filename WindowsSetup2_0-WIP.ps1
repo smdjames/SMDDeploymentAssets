@@ -125,7 +125,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 #Install Java
     choco install jre8 -y
-    gi
+
 #Install Firefox
     choco install firefox -y
 

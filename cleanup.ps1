@@ -50,7 +50,7 @@ Write-Host "Press any key to continue ..."
 
 # Function by Chuck Fowler to install Automate & ScreenConnect
 # Chuck's code: https://github.com/braingears
-Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
+
 Function Install-Automate {
 <#
 .SYNOPSIS
@@ -399,7 +399,7 @@ $Token = $TokenID.Token
 
 #Test Token output 
 #Write-Output $Token
-
+Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
 Install-Automate -Server 'systemsmd.hostedrmm.com' -LocationID $LocID -Token $Token -Silent -Force -Transcript
 
 #sleep to ensure msiexec is available to run
