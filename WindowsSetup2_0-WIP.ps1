@@ -35,7 +35,7 @@ while ($confirmInfo -ne 'y') {
 
 #Set admin password
 do {
-Write-Host "`nEnter Admin password"
+Write-Host "`nEnter SystemsMD password"
     $pwd1 = Read-Host "Password" -AsSecureString
     $pwd2 = Read-Host "Confirm Password" -AsSecureString
     $pwd1_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd1))
@@ -155,8 +155,8 @@ Write-Warning "Errors past this point indicate one of two things `n1.The service
 Start-Sleep 15
 
     Write-Host  -ForegroundColor Green "Running O&O Shutup with Recommended Settings"
-    Invoke-WebRequest -Uri "https://https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/ooshutup10.cfg" -Outfile "C:\Support\Scripts\ooshutup10.cfg"
-    Invoke-WebRequest -Uri "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -outFile "C:\Support\Script\OOSU10.exe"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/smdjames/SMDDeploymentAssets/main/ooshutup10.cfg" -Outfile "C:\Support\Scripts\ooshutup10.cfg"
+    Invoke-WebRequest -Uri "https://dl5.oo-software.com/files/ooshutup10/OOSU10.exe" -outFile "C:\Support\Scripts\OOSU10.exe"
     cd C:\Support\Scripts
     ./OOSU10.exe ooshutup10.cfg /quiet
 
