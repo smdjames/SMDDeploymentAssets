@@ -408,7 +408,7 @@ iex -Command "C:\Support\Scripts\WindowsSetup2_0.ps1"
 
 # Removes install directories except logs
 Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
-Remove-Item -Path C:\\Support\\Automate -Recurse -Verbose
+Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
 Remove-Item -Path C:\\Support\\CSVs -Recurse -Verbose
 
 Write-Host -ForegroundColor Green "Windows deployment complete. `nThis window will close in 5 seconds."
