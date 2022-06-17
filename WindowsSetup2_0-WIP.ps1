@@ -25,6 +25,32 @@ Changes By Cole Bermudez:
 # Create a log file for debugging
 Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
 
+#Check for running msiexec
+Write-Output "`n`nWaiting for the Process to Stop`n`n"
+Wait-Process -Name 'msiexec'
+Write-Output 'MSI Installer Process is stopped`n`n'
+
+# Start Automate installer in quiet mode
+$InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
+$Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
+$LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
+Write-Verbose "MSIEXEC Log Files: $LogFullPath"
+    If ($InstallExitCode -eq 0) {
+        If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
+    } Else {
+        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Red
+        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Red
+        Write-Host "The Automate MSI failed. Waiting 15 Seconds..." -ForegroundColor Red
+        Start-Sleep -s 15
+        Write-Host "Installer will execute twice (KI 12002617)" -ForegroundColor Yellow
+        $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
+        $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
+        $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
+        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
+        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
+
+Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
+
 #Set the Computer name
 while ($confirmInfo -ne 'y') {
 	$compName = (Read-Host "Enter New Computer Name")
@@ -34,27 +60,33 @@ while ($confirmInfo -ne 'y') {
 	}
 
 #Set admin password
-do {
-Write-Host "`nEnter SystemsMD password"
-    $pwd1 = Read-Host "Password" -AsSecureString
-    $pwd2 = Read-Host "Confirm Password" -AsSecureString
-    $pwd1_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd1))
-    $pwd2_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd2))
-    
-    if ($pwd1_text -ne $pwd2_text) {
-    Write-Warning "`nPasswords do not match. Please try again."
-    }
-}
-while ($pwd1_text -ne $pwd2_text)
-
-Write-Host "`n`nPasswords matched"
-$userPass = $pwd1
-$pwd1_text = 'a'
-$pwd2_text = 'a'
+$Password = Read-Host "`nPlease set the password for the SystemsMD user" -AsSecureString
+$UserAccount = Get-LocalUser -Name "SystemsMD"
+$UserAccount | Set-LocalUser -Password $Password
+# do {
+# Write-Host "`nEnter SystemsMD password"
+#     $pwd1 = Read-Host "Password" -AsSecureString
+#     $pwd2 = Read-Host "Confirm Password" -AsSecureString
+#     $pwd1_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd1))
+#     $pwd2_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd2))
+#
+#     if ($pwd1_text -ne $pwd2_text) {
+#     Write-Warning "`nPasswords do not match. Please try again."
+#     }
+# }
+# while ($pwd1_text -ne $pwd2_text)
+#
+# Write-Host "`n`nPasswords matched"
+# $userPass = $pwd1
+# $pwd1_text = 'a'
+# $pwd2_text = 'a'
 
 #set new PC name
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
 Rename-Computer -NewName $compName
+
+# Start Automate installer in quiet mode
+Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
 
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
@@ -108,6 +140,10 @@ powercfg.exe -change -hibernate-timeout-ac 0
 powercfg.exe -change -hibernate-timeout-dc 0
 #Set Mountain Time Zone
 Set-TimeZone -Id "Mountain Standard Time"
+
+#Turn off powersave for all devices
+Write-Host -ForegroundColor Green "Disabling power management for USB and Network interfaces"
+Get-CimInstance -ClassName MSPower_DeviceEnable -Namespace root/WMI | Set-CimInstance -Property @{Enable = $false}
 
 Write-Host -ForegroundColor Green "Enable .NET Framework"
 Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
@@ -250,7 +286,7 @@ Start-Sleep 15
     Stop-Service "SysMain" -WarningAction SilentlyContinue
     Set-Service "SysMain" -StartupType Disabled
     Write-Host  -ForegroundColor Green "Disabling Hibernation..."
-    Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernteEnabled" -Type Dword -Value 0
+    Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Power" -Name "HibernateEnabled" -Type Dword -Value 0
     If (!(Test-Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings")) {
         New-Item -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" | Out-Null
     }
@@ -332,7 +368,7 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies
     Write-Host -ForegroundColor Green "Showing known file extensions..."
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
 
-    # Service tweaks to Manual 
+    # Service tweaks to Manual
 
     $services = @(
     "diagnosticshub.standardcollector.service"     # Microsoft (R) Diagnostics Hub Standard Collector Service
@@ -387,17 +423,17 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies
     "Browser"                                       #Disables computer browser
     "BthAvctpSvc"                                   #AVCTP service (This is Audio Video Control Transport Protocol service.)
     #"BDESVC"                                        #Disables bitlocker
-    "iphlpsvc"                                      #Disables ipv6 but most websites don't use ipv6 they use ipv4     
-    "edgeupdate"                                    # Disables one of edge update service  
-    "MicrosoftEdgeElevationService"                 # Disables one of edge  service 
-    "edgeupdatem"                                   # disbales another one of update service (disables edgeupdatem)                          
+    "iphlpsvc"                                      #Disables ipv6 but most websites don't use ipv6 they use ipv4
+    "edgeupdate"                                    # Disables one of edge update service
+    "MicrosoftEdgeElevationService"                 # Disables one of edge  service
+    "edgeupdatem"                                   # disbales another one of update service (disables edgeupdatem)
     "SEMgrSvc"                                      #Disables Payments and NFC/SE Manager (Manages payments and Near Field Communication (NFC) based secure elements)
     #"PNRPsvc"                                      # Disables peer Name Resolution Protocol ( some peer-to-peer and collaborative applications, such as Remote Assistance, may not function, Discord will still work)
     #"p2psvc"                                       # Disbales Peer Name Resolution Protocol(nables multi-party communication using Peer-to-Peer Grouping.  If disabled, some applications, such as HomeGroup, may not function. Discord will still work)
     #"p2pimsvc"                                     # Disables Peer Networking Identity Manager (Peer-to-Peer Grouping services may not function, and some applications, such as HomeGroup and Remote Assistance, may not function correctly.Discord will still work)
     "PerfHost"                                      #Disables  remote users and 64-bit processes to query performance .
     "BcastDVRUserService_48486de"                   #Disables GameDVR and Broadcast   is used for Game Recordings and Live Broadcasts
-    "CaptureService_48486de"                        #Disables ptional screen capture functionality for applications that call the Windows.Graphics.Capture API.  
+    "CaptureService_48486de"                        #Disables ptional screen capture functionality for applications that call the Windows.Graphics.Capture API.
     "cbdhsvc_48486de"                               #Disables   cbdhsvc_48486de (clipboard service it disables)
     #"BluetoothUserService_48486de"                  #disbales BluetoothUserService_48486de (The Bluetooth user service supports proper functionality of Bluetooth features relevant to each user session.)
     "WpnService"                                    #Disables WpnService (Push Notifications may not work )
@@ -411,14 +447,14 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies
     "HPSysInfoCap"
     "HpTouchpointAnalyticsService"
     #hyper-v services
-     "HvHost"                          
+     "HvHost"
     "vmickvpexchange"
     "vmicguestinterface"
     "vmicshutdown"
     "vmicheartbeat"
     "vmicvmsession"
     "vmicrdv"
-    "vmictimesync" 
+    "vmictimesync"
     # Services which cannot be disabled
     #"WdNisSvc"
 )
@@ -440,6 +476,8 @@ Write-Host  -ForegroundColor Green "Disabling Bing Search in Start Menu..."
     }
     Write-Host  -ForegroundColor Green "Hiding Search Box / Button..."
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name "SearchboxTaskbarMode" -Type DWord -Value 0
+		Write-Host  -ForegroundColor Green "Removing News and Interests from Taskbar..."
+		Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Feeds" -Name "ShellFeedsTaskbarViewMode" -Type DWord -Value 2
 
     Write-Host  -ForegroundColor Green "Removing Start Menu Tiles"
 
@@ -593,6 +631,8 @@ $Bloatware = @(
     "*HiddenCity*"
     "*AdobePhotoshopExpress*"
     "*HotspotShieldFreeVPN*"
+		"*Disney*"
+		"*Spotify*"
 
     #Optional: Typically not removed but you can if you need to for some reason
     "*Microsoft.Advertising.Xaml*"
@@ -615,28 +655,28 @@ $Bloatware = @(
     $ResultText.text = "`r`n" +"`r`n" + "Finished Removing Bloatware Apps"
 
 #Security Windows Update
- Write-Host  -ForegroundColor Green "Disabling driver offering through Windows Update..."
-    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata")) {
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force | Out-Null
-    }
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -Type DWord -Value 1
-    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching")) {
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force | Out-Null
-    }
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -Type DWord -Value 1
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -Type DWord -Value 1
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -Type DWord -Value 0
-    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate")) {
-        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Out-Null
-    }
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1
+ # Write-Host  -ForegroundColor Green "Disabling driver offering through Windows Update..."
+ #    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata")) {
+ #        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force | Out-Null
+ #    }
+ #    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Name "PreventDeviceMetadataFromNetwork" -Type DWord -Value 1
+ #    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching")) {
+ #        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Force | Out-Null
+ #    }
+ #    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontPromptForWindowsUpdate" -Type DWord -Value 1
+ #    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DontSearchWindowsUpdate" -Type DWord -Value 1
+ #    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DriverSearching" -Name "DriverUpdateWizardWuSearchEnabled" -Type DWord -Value 0
+ #    If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate")) {
+ #        New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" | Out-Null
+ #    }
+ #    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Type DWord -Value 1
     Write-Host  -ForegroundColor Green "Disabling Windows Update automatic restart..."
     If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU")) {
         New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Force | Out-Null
     }
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoRebootWithLoggedOnUsers" -Type DWord -Value 1
     Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUPowerManagement" -Type DWord -Value 0
-    Write-Host  -ForegroundColor Green "Disabled driver offering through Windows Update"
+    # Write-Host  -ForegroundColor Green "Disabled driver offering through Windows Update"
     $ResultText.text = "`r`n" +"`r`n" + "Set Windows Update to Sane Settings"
 
 Write-Host  -ForegroundColor Green "Disabling Action Center..."
@@ -674,8 +714,8 @@ Stop-Transcript
 Write-Host -ForegroundColor Green "Windows Setup complete."
 #Sleep to read completion
 Start-Sleep -s 5
-Write-Host -ForegroundColor Green "The Computer will restart in 10 seconds"
-Start-Sleep -s 10
+Write-Host -ForegroundColor Green "The Computer will restart in 15 seconds"
+Start-Sleep -s 20
 Restart-Computer
 
 <#
@@ -695,7 +735,7 @@ Password: Use the current standard password
 Security Questions:
 Pick a random question
 Mash random letters on the keyboard
-Repeat two more times 
+Repeat two more times
 Decline Cortana
 "Do more across devices..." - NO
 "Choose privacy settings..."
@@ -718,7 +758,7 @@ CONFIGURE POWER OPTIONS [] #See Lines 43-50
 CONFIGURE SSD OVERPROVISIONING [] #See Lines 36-37
 ENSURE PC IS FULLY UPDATED [] #Can Check again?
 
-5: SOFTWARE AND DRIVERS 
+5: SOFTWARE AND DRIVERS
 UPDATE AND CONFIGURE DEVICES [] #See Lines 572
 Run devmgmt.msc
 Right click on, and update the following devices:
@@ -727,7 +767,7 @@ Any and all NICs (Network Interface Cards) both Ethernet and WiFi
 Touchpads (laptops)
 Built-in keyboards (laptops)
 Built-in monitors (laptops)
-In properties, enable wake and disable powersave on the NICs #see line 83
+In properties, enable wake and disable powersave on the NICs #see line 115
 In properties, disable powersave on all USB hubs
 Ensure there are no unknown devices or devices with red/yellow icons #Possible WMIC command
 
