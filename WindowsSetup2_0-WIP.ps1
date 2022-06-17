@@ -40,8 +40,8 @@ Write-Verbose "MSIEXEC Log Files: $LogFullPath"
     } Else {
         Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Red
         Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Red
-        Write-Host "The Automate MSI failed. Waiting 15 Seconds..." -ForegroundColor Red
-        Start-Sleep -s 15
+        Write-Host "The Automate MSI failed. Waiting 30 Seconds..." -ForegroundColor Red
+        Start-Sleep -s 30
         Write-Host "Installer will execute twice (KI 12002617)" -ForegroundColor Yellow
         $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
         $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
