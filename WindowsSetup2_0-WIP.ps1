@@ -83,9 +83,6 @@ $UserAccount | Set-LocalUser -Password $Password
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
 Rename-Computer -NewName $compName
 
-# Start Automate installer in quiet mode
-Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
-
 #initiates the variables required for the script
 $diskProps = (Get-PhysicalDisk | where size -gt 100gb)
 $cortanaPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"
