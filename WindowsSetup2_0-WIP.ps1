@@ -31,9 +31,9 @@ Wait-Process -Name 'msiexec'
 Write-Output 'MSI Installer Process is stopped`n`n'
 
 # Start Automate installer in quiet mode
-$InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
 $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
 $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
+$InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
 Write-Verbose "MSIEXEC Log Files: $LogFullPath"
     If ($InstallExitCode -eq 0) {
         If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
