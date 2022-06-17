@@ -48,6 +48,7 @@ Write-Verbose "MSIEXEC Log Files: $LogFullPath"
         $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
         Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
         Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
+			}
 
 #Set the Computer name
 while ($confirmInfo -ne 'y') {
