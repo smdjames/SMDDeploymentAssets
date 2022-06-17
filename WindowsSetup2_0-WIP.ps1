@@ -49,8 +49,6 @@ Write-Verbose "MSIEXEC Log Files: $LogFullPath"
         Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
         Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
 
-Start-Process msiexec -Wait -ArgumentList '/I C:\Support\Installers\Automate-test.msi /quiet'
-
 #Set the Computer name
 while ($confirmInfo -ne 'y') {
 	$compName = (Read-Host "Enter New Computer Name")
