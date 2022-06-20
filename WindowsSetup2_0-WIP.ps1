@@ -11,15 +11,6 @@ Modified by Cole Bermudez and James McGee
 For sole and exclusive use by SystemsMD
 Last updated: January 18, 2021
 
-Change Log:
-1/18/2022
-Changes By Cole Bermudez:
--Corrected SSD Overprovisioning
--Added in Changing Computer name
--Added creation of CustLocAdmin with a unique password set by input
--Added Reg key to lock to version 21H2
--Added services that should be manually started to reduce startup time and improve performance and resource usage
-
 #>
 
 # Create a log file for debugging
@@ -29,6 +20,8 @@ Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
 Write-Output "`n`nWaiting for the Process to Stop`n`n"
 Wait-Process -Name 'msiexec'
 Write-Output 'MSI Installer Process is stopped`n`n'
+
+Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
 
 # Start Automate installer in quiet mode
 $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
@@ -62,23 +55,6 @@ while ($confirmInfo -ne 'y') {
 $Password = Read-Host "`nPlease set the password for the SystemsMD user" -AsSecureString
 $UserAccount = Get-LocalUser -Name "SystemsMD"
 $UserAccount | Set-LocalUser -Password $Password
-# do {
-# Write-Host "`nEnter SystemsMD password"
-#     $pwd1 = Read-Host "Password" -AsSecureString
-#     $pwd2 = Read-Host "Confirm Password" -AsSecureString
-#     $pwd1_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd1))
-#     $pwd2_text = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd2))
-#
-#     if ($pwd1_text -ne $pwd2_text) {
-#     Write-Warning "`nPasswords do not match. Please try again."
-#     }
-# }
-# while ($pwd1_text -ne $pwd2_text)
-#
-# Write-Host "`n`nPasswords matched"
-# $userPass = $pwd1
-# $pwd1_text = 'a'
-# $pwd2_text = 'a'
 
 #set new PC name
 Write-Host -ForegroundColor Green "`n`nSetting Computer name..."
@@ -96,7 +72,7 @@ $avCheck = $false
 $installCheck = 'n'
 $officeCheck = $false
 
-#Create CutLocAdmin
+#Create CustLocAdmin
 $Password = Read-Host "Please set the password for CustLocAdmin" -AsSecureString
 New-LocalUser -Name "CustLocAdmin" -Password $Password -PasswordNeverExpires
 Add-LocalGroupMember -Group "Administrators" -Member "CustLocAdmin"
@@ -703,6 +679,14 @@ Write-Host  -ForegroundColor Green "Showing tray icons..."
 	Write-Host  -ForegroundColor Green "Done - Now showing all tray icons"
     $ResultText.text = "`r`n" +"`r`n" + "Tray Icons now set to show all"
 
+Write-Host  -ForegroundColor Green "Fixing OneDrive"
+	Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\OneDrive" -Name "DisableFileSyncNGSC" -Type DWord -Value 0
+	Write-Host  -ForegroundColor Green "Done - OneDrive patch applied"
+    $ResultText.text = "`r`n" +"`r`n" + "AzureAD OneDrive launch regkey patch applied"
+
+# Removes install directories except logs
+Remove-Item -Path C:\\Support\\Scripts -Recurse -Verbose
+Remove-Item -Path C:\\Support\\Installers -Recurse -Verbose
 
 #Close debugging log Transcript
 Stop-Transcript
