@@ -2,18 +2,13 @@
 Company: SystemsMD
 Contact: james@systemsmd.com
 Created: October 15, 2021
-Last Modified: January 25, 2022
+Last Modified: August 22, 2022
 
 Credits:
 James McGee created the basis of this script
 Cole Bermudez added on and modified
-Last Updated: January 25, 2022
+Last Updated: August 22, 2022
 
-Change Log:
-1/25/2022
-Changes By Cole Bermudez:
--Added lines 342-371 as a basis for dynamic installation of Automate once a CSV of Tokens is compiled.
-#>
 
 Write-Host -ForegroundColor Green "Windows Deployment will now begin. `nPlease refer to logs for review."
 
