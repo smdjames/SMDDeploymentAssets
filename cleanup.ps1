@@ -8,7 +8,7 @@ Credits:
 James McGee created the basis of this script
 Cole Bermudez added on and modified
 Last Updated: August 22, 2022
-
+#>
 
 Write-Host -ForegroundColor Green "Windows Deployment will now begin. `nPlease refer to logs for review."
 
