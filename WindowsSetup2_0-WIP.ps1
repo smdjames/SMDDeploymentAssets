@@ -603,8 +603,14 @@ $Bloatware = @(
     "*HiddenCity*"
     "*AdobePhotoshopExpress*"
     "*HotspotShieldFreeVPN*"
-		"*Disney*"
-		"*Spotify*"
+    "*Disney*"
+    "*Spotify*"
+    "*Alexa*"
+    "*Cortana*"
+    "*McAfee*"
+    "*Messenger*"
+    "*ClipChamp*"
+    "*Instagram*"
 
     #Optional: Typically not removed but you can if you need to for some reason
     "*Microsoft.Advertising.Xaml*"
