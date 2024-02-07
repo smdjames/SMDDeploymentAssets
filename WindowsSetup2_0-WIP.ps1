@@ -2,15 +2,11 @@
 Company: SystemsMD
 Contact: james@systemsmd.com
 Created: October 15, 2021
-Last Modified: February 7, 2021
+Last Modified: February 7, 2024
 
 Credits:
 Based on the initial concept of WindowsSetup.ps1
 Created by Michael Bartlett
-Modified by Cole Bermudez and James McGee
-For sole and exclusive use by SystemsMD
-Last updated: January 18, 2021
-
 #>
 
 # Create a log file for debugging
