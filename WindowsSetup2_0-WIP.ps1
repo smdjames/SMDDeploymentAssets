@@ -118,9 +118,11 @@ Enable-WindowsOptionalFeature -Online -FeatureName NetFx3 -All
 
 ##########Essential Tweaks from Cole##########
 
+#Disabled as this caused too many issues with patching compliance 
+#This was originally a kludge to stop autoupdating to W11 and no longer works
 #Set Reg key to lock to 21H2
-REG ADD HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /f /v TargetReleaseVersion /t Reg_DWORD /d 1
-REG ADD HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /f /v TargetReleaseVersionInfo /t REG_SZ /d 21H2
+#REG ADD HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /f /v TargetReleaseVersion /t Reg_DWORD /d 1
+#REG ADD HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate /f /v TargetReleaseVersionInfo /t REG_SZ /d 21H2
 
 Write-Host -ForegroundColor Green "Install Chocolatey to automate basic program installation"
 #install Chocolatey and other programs
