@@ -13,31 +13,31 @@ Created by Michael Bartlett
 Start-Transcript -Append C:\Support\Logs\WindowsSetupLog.txt
 
 #Check for running msiexec
-Write-Output "`n`nWaiting for the Process to Stop`n`n"
-Wait-Process -Name 'msiexec'
-Write-Output 'MSI Installer Process is stopped`n`n'
+#Write-Output "`n`nWaiting for the Process to Stop`n`n"
+#Wait-Process -Name 'msiexec'
+#Write-Output 'MSI Installer Process is stopped`n`n'
 
-Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
+#Write-Host -ForegroundColor Green "It is expected that Automate will fail on the first attempt."
 
 # Start Automate installer in quiet mode
-$Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
-$LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
-$InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
-Write-Verbose "MSIEXEC Log Files: $LogFullPath"
-    If ($InstallExitCode -eq 0) {
-        If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
-    } Else {
-        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Red
-        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Red
-        Write-Host "The Automate MSI failed. Waiting 30 Seconds..." -ForegroundColor Red
-        Start-Sleep -s 30
-        Write-Host "Installer will execute twice (KI 12002617)" -ForegroundColor Yellow
-        $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
-        $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
-        $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
-        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
-        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
-			}
+#$Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
+#$LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
+#$InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
+#Write-Verbose "MSIEXEC Log Files: $LogFullPath"
+#    If ($InstallExitCode -eq 0) {
+#        If (!$Silent) {Write-Verbose "The Automate Agent Installer Executed Without Errors"}
+#    } Else {
+#        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Red
+#        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Red
+#        Write-Host "The Automate MSI failed. Waiting 30 Seconds..." -ForegroundColor Red
+#        Start-Sleep -s 30
+#        Write-Host "Installer will execute twice (KI 12002617)" -ForegroundColor Yellow
+#        $Date = (get-date -UFormat %Y-%m-%d_%H-%M-%S)
+#        $LogFullPath = "C:\Support\Logs\Automate_Agent_$Date.log"
+#        $InstallExitCode = (Start-Process "msiexec.exe" -ArgumentList "/i C:\Support\Installers\Automate-test.msi /quiet /norestart /L*V $($LogFullPath)" -NoNewWindow -Wait -PassThru).ExitCode
+#        Write-Host "Automate Installer Exit Code: $InstallExitCode" -ForegroundColor Yellow
+#        Write-Host "Automate Installer Logs: $LogFullPath" -ForegroundColor Yellow
+#			}
 
 #Set the Computer name
 while ($confirmInfo -ne 'y') {
