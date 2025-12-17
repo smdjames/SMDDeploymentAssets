@@ -136,6 +136,9 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 #Install 7-zip
     choco install 7zip -y
 
+# Install Office 365 suite
+	choco install office365business
+
 #Enable RDP
 #Redundant because thanks Bill
 Write-Host -ForegroundColor Green "Enable RDP"
@@ -693,3 +696,4 @@ Start-Sleep -s 5
 Write-Host -ForegroundColor Green "The Computer will restart in 15 seconds"
 Start-Sleep -s 20
 Restart-Computer
+
