@@ -136,10 +136,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 #Install 7-zip
     choco install 7zip -y
 
-# Install Office 365 suite
-## Removed due to issues with the installation timing out
-###   choco install office365business
-
 #Enable RDP
 #Redundant because thanks Bill
 Write-Host -ForegroundColor Green "Enable RDP"
@@ -532,7 +528,6 @@ $Bloatware = @(
     "Microsoft.MinecraftUWP"
     "Microsoft.GamingServices"
     "Microsoft.WindowsReadingList"
-    #"Microsoft.GetHelp"
     "Microsoft.Getstarted"
     "Microsoft.Messaging"
     "Microsoft.Microsoft3DViewer"
@@ -555,9 +550,7 @@ $Bloatware = @(
     "Microsoft.WindowsPhone"
     "Microsoft.WindowsSoundRecorder"
     "Microsoft.XboxApp"
-    "Microsoft.ConnectivityStore"
-    "Microsoft.CommsPhone"
-    "Microsoft.ScreenSketch"
+    #"Microsoft.ScreenSketch"
     "Microsoft.Xbox.TCUI"
     "Microsoft.XboxGameOverlay"
     "Microsoft.XboxGameCallableUI"
@@ -608,11 +601,6 @@ $Bloatware = @(
 
     #Optional: Typically not removed but you can if you need to for some reason
     "*Microsoft.Advertising.Xaml*"
-    #"*Microsoft.MSPaint*"
-    #"*Microsoft.MicrosoftStickyNotes*"
-    #"*Microsoft.Windows.Photos*"
-    #"*Microsoft.WindowsCalculator*"
-    #"*Microsoft.WindowsStore*"
 )
 
     Write-Host  -ForegroundColor Green "Removing Bloatware"
@@ -697,5 +685,3 @@ Start-Sleep -s 5
 Write-Host -ForegroundColor Green "The Computer will restart in 15 seconds"
 Start-Sleep -s 20
 Restart-Computer
-
-
